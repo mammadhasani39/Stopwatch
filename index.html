@@ -54,16 +54,15 @@
   <div id="timer">00:00:00.00</div>
 
   <div class="buttons">
-    <button id="startBtn" onclick="start()">شروع</button>
-    <button id="stopResetBtn" onclick="stop()">توقف</button>
+    <button id="toggleBtn" onclick="toggleTimer()">شروع</button>
+    <button id="resetBtn" onclick="reset()">ریست</button>
   </div>
 
   <script>
     let startTime = 0, interval = null, running = false, elapsed = 0;
 
     const timerEl = document.getElementById('timer');
-    const startBtn = document.getElementById('startBtn');
-    const stopResetBtn = document.getElementById('stopResetBtn');
+    const toggleBtn = document.getElementById('toggleBtn');
 
     function formatTime(ms) {
       const centis = Math.floor(ms / 10) % 100;
@@ -83,31 +82,27 @@
       timerEl.textContent = formatTime(now - startTime);
     }
 
-    function start() {
-      if (running) return;
-      running = true;
-      startTime = performance.now() - elapsed;
-      interval = setInterval(update, 10);
-      stopResetBtn.textContent = 'توقف';
-      stopResetBtn.onclick = stop;
-    }
-
-    function stop() {
-      if (!running) return;
-      running = false;
-      clearInterval(interval);
-      elapsed = performance.now() - startTime;
-      stopResetBtn.textContent = 'ریست';
-      stopResetBtn.onclick = reset;
+    function toggleTimer() {
+      if (!running) {
+        running = true;
+        startTime = performance.now() - elapsed;
+        interval = setInterval(update, 10);
+        toggleBtn.textContent = 'توقف';
+      } else {
+        running = false;
+        clearInterval(interval);
+        elapsed = performance.now() - startTime;
+        toggleBtn.textContent = 'شروع';
+      }
     }
 
     function reset() {
-      stopResetBtn.textContent = 'توقف';
-      stopResetBtn.onclick = stop;
-
+      running = false;
+      clearInterval(interval);
       startTime = 0;
       elapsed = 0;
       timerEl.textContent = "00:00:00.00";
+      toggleBtn.textContent = 'شروع';
     }
   </script>
 
