@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>تایمر با دکمه ریست دینامیک</title>
+  <title>Stopwatch</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -88,7 +88,6 @@
       running = true;
       startTime = performance.now() - elapsed;
       interval = setInterval(update, 10);
-      // وقتی تایمر شروع شد، دکمه stopReset به توقف تبدیل میشه
       stopResetBtn.textContent = 'توقف';
       stopResetBtn.onclick = stop;
     }
@@ -98,7 +97,6 @@
       running = false;
       clearInterval(interval);
       elapsed = performance.now() - startTime;
-      // وقتی تایمر توقف کرد، دکمه stopReset به ریست تبدیل میشه
       stopResetBtn.textContent = 'ریست';
       stopResetBtn.onclick = reset;
     }
