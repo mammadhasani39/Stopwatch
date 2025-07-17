@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تایمر با دکمه ریست دینامیک</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #0f0;
+      font-family: Tahoma, monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+    #timer {
+      font-size: 10vw;
+      direction: ltr;
+      text-align: center;
+      letter-spacing: 1px;
+      margin-bottom: 30px;
+    }
+    .buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      width: 100%;
+      max-width: 400px;
+    }
+    button {
+      flex: 1;
+      min-width: 120px;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      background-color: #111;
+      color: #0f0;
+      border: 2px solid #0f0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background-color: #222;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="timer">00:00:00.00</div>
+
+  <div class="buttons">
+    <button id="startBtn" onclick="start()">شروع</button>
+    <button id="stopResetBtn" onclick="stop()">توقف</button>
+  </div>
+
+  <script>
+    let startTime = 0, interval = null, running = false, elapsed = 0;
+
+    const timerEl = document.getElementById('timer');
+    const startBtn = document.getElementById('startBtn');
+    const stopResetBtn = document.getElementById('stopResetBtn');
+
+    function formatTime(ms) {
+      const centis = Math.floor(ms / 10) % 100;
+      const secs = Math.floor(ms / 1000) % 60;
+      const mins = Math.floor(ms / 60000) % 60;
+      const hrs = Math.floor(ms / 3600000);
+      return (
+        String(hrs).padStart(2, '0') + ':' +
+        String(mins).padStart(2, '0') + ':' +
+        String(secs).padStart(2, '0') + '.' +
+        String(centis).padStart(2, '0')
+      );
+    }
+
+    function update() {
+      const now = performance.now();
+      timerEl.textContent = formatTime(now - startTime);
+    }
+
+    function start() {
+      if (running) return;
+      running = true;
+      startTime = performance.now() - elapsed;
+      interval = setInterval(update, 10);
+      // وقتی تایمر شروع شد، دکمه stopReset به توقف تبدیل میشه
+      stopResetBtn.textContent = 'توقف';
+      stopResetBtn.onclick = stop;
+    }
+
+    function stop() {
+      if (!running) return;
+      running = false;
+      clearInterval(interval);
+      elapsed = performance.now() - startTime;
+      // وقتی تایمر توقف کرد، دکمه stopReset به ریست تبدیل میشه
+      stopResetBtn.textContent = 'ریست';
+      stopResetBtn.onclick = reset;
+    }
+
+    function reset() {
+      stopResetBtn.textContent = 'توقف';
+      stopResetBtn.onclick = stop;
+
+      startTime = 0;
+      elapsed = 0;
+      timerEl.textContent = "00:00:00.00";
+    }
+  </script>
+
+</body>
+</html>
